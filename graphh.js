@@ -44,7 +44,7 @@ d3.csv("./data.csv")
 
     const optionsOfSectors = selectSector
       .selectAll("option")
-      .data(Sectors)
+      .data(["", ...Sectors])
       .enter()
       .append("option")
       .text((d) => d)
@@ -52,7 +52,7 @@ d3.csv("./data.csv")
 
     const optionsOfSubsectors = selectSubsector
       .selectAll("option")
-      .data(Subsector)
+      .data(["", ...Subsector])
       .enter()
       .append("option")
       .text((d) => d)
@@ -60,7 +60,7 @@ d3.csv("./data.csv")
 
     const optionsOfIndicators = selectIndicator
       .selectAll("option")
-      .data(Indicator)
+      .data(["", ...Indicator])
       .enter()
       .append("option")
       .text((d) => d)
@@ -69,9 +69,7 @@ d3.csv("./data.csv")
     // Define the color scale
     const colorScales = d3.scaleOrdinal(d3.schemeCategory10);
 
-    // Extract the unique country names
-    const countries = [...new Set(data.map((d) => d.Country))];
-    // Iterate over each country
+    // Set the domain of the x and y scales
     x.domain(
       d3.extent(data, function (d) {
         return new Date(d.Year);
@@ -83,14 +81,16 @@ d3.csv("./data.csv")
         return d.Rank;
       }),
     ]);
+    // extract the unique country names
+    const countries = [...new Set(data.map((d) => d.Country))];
     //!fetching countries
-
-    countries.forEach(function (country, i) {
+    countries.forEach(function (country, index) {
       // Filter the data for the current country
       const filteredData = data.filter(function (d) {
         return d.Country === country;
       });
-      function updateGraph() {
+
+      function updatedGraph() {
         const selectedSector = selectSector.property("value");
         const selectedSubsector = selectSubsector.property("value");
         const selectedIndicator = selectIndicator.property("value");
@@ -98,7 +98,6 @@ d3.csv("./data.csv")
         const filteredCountries = [
           ...new Set(filteredData.map((d) => d.Country)),
         ];
-
         if (selectedSector) {
           filteredData = filteredData.filter(
             (d) => d.Sector === selectedSector
@@ -114,12 +113,14 @@ d3.csv("./data.csv")
             (d) => d.Indicator === selectedIndicator
           );
         }
+
         // Clear the previous graph
         svg.selectAll("path").remove();
 
-        // Update the graph with the filtered data
-        filteredCountries.forEach(function (country, i) {
+        filteredCountries.forEach(function (country, index) {
           const countryData = filteredData.filter((d) => d.Country === country);
+          // Create the line generator for the current country
+
           const line = d3
             .line()
             .x(function (d) {
@@ -139,14 +140,12 @@ d3.csv("./data.csv")
             .append("path")
             .datum(countryData)
             .attr("fill", "none")
-            .attr("stroke", colorScales(i))
+            .attr("stroke", colorScales(index))
             .attr("stroke-width", 3)
             .attr("d", line);
         });
       }
-
-      updateGraph();
-      // Add the x-axis
+      updatedGraph();
       svg
         .append("g")
         .attr("class", "x-axis")
@@ -156,11 +155,10 @@ d3.csv("./data.csv")
       // Add the y-axis
       svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
 
-      selectSector.on("change", updateGraph);
-      selectSubsector.on("change", updateGraph);
-      selectIndicator.on("change", updateGraph);
+      selectSector.on("change", updatedGraph);
+      selectSubsector.on("change", updatedGraph);
+      selectIndicator.on("change", updatedGraph);
     });
-
     // Add the x-axis
     svg
       .append("g")
