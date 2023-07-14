@@ -6,7 +6,6 @@ const selectCountry = d3.select("#country");
 const selectSector = d3.select("#sector");
 const selectSubsector = d3.select("#subsector");
 const selectIndicator = d3.select("#indicator");
-const selectYear = d3.select("#year");
 
 // Set up the x and y scales
 const x = d3.scaleTime().range([0, width]);
@@ -59,7 +58,6 @@ d3.csv("./data.csv")
         const selectedSector = selectSector.property("value");
         const selectedSubsector = selectSubsector.property("value");
         const selectedIndicator = selectIndicator.property("value");
-        const selectedYear = selectYear.property("value");
 
         // Filter the data based on the selected filters
         let filteredData = data;
@@ -83,9 +81,6 @@ d3.csv("./data.csv")
           filteredData = filteredData.filter(
             (d) => d.Indicator === selectedIndicator
           );
-        }
-        if (selectedYear) {
-          filteredData = filteredData.filter((d) => d.Year === selectedYear);
         } else {
           filteredData = filteredData;
         }
@@ -123,7 +118,6 @@ d3.csv("./data.csv")
       selectSector.on("change", updateGraph);
       selectSubsector.on("change", updateGraph);
       selectIndicator.on("change", updateGraph);
-      selectYear.on("change", updateGraph);
     });
 
     // Add the x-axis
@@ -139,7 +133,6 @@ d3.csv("./data.csv")
     const Sectors = [...new Set(data.map((d) => d.Sector))];
     const Subsector = [...new Set(data.map((d) => d.Subsector))];
     const Indicator = [...new Set(data.map((d) => d.Indicator))];
-    const Years = [...new Set(data.map((d) => d.Year))];
 
     const checkboxesOfCountries = selectCountry
       .selectAll("input")
@@ -177,14 +170,6 @@ d3.csv("./data.csv")
     const optionsOfIndicators = selectIndicator
       .selectAll("option")
       .data(Indicator)
-      .enter()
-      .append("option")
-      .text((d) => d)
-      .attr("value", (d) => d);
-
-    const optionsOfYears = selectYear
-      .selectAll("option")
-      .data(Years.sort().reverse())
       .enter()
       .append("option")
       .text((d) => d)
