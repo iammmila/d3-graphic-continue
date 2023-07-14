@@ -6,6 +6,7 @@ const selectCountry = d3.select("#country");
 const selectSector = d3.select("#sector");
 const selectSubsector = d3.select("#subsector");
 const selectIndicator = d3.select("#indicator");
+const countryCheckboxes = d3.select("#country-checkboxes");
 
 // Set up the x and y scales
 const x = d3.scaleTime().range([0, width]);
@@ -35,6 +36,23 @@ d3.csv("./data.csv")
     const Indicator = [...new Set(data.map((d) => d.Indicator))];
 
     //! selections' options
+    // Create checkboxes for multiple choices
+    const countryCheckboxOptions = countryCheckboxes
+      .selectAll("label")
+      .data(["", ...Countries])
+      .enter()
+      .append("label");
+
+    countryCheckboxOptions
+      .append("input")
+      .attr("type", "checkbox")
+      .attr("value", (d) => d)
+      // .on("change", updatedGraph);
+
+    // countryCheckboxOptions
+      .append("span")
+      .text((d) => (d ? d : "All Countries"));
+
     const optionsOfCountries = selectCountry
       .selectAll("option")
       .data(["", ...Countries])
@@ -96,10 +114,20 @@ d3.csv("./data.csv")
         const selectedSector = selectSector.property("value");
         const selectedSubsector = selectSubsector.property("value");
         const selectedIndicator = selectIndicator.property("value");
+        // const selectedCountries = countryCheckboxes
+        //   .selectAll("input[type=checkbox]:checked")
+        //   .nodes()
+        //   .map((checkbox) => checkbox.value);
+
         let filteredData = data;
         const filteredCountries = [
           ...new Set(filteredData.map((d) => d.Country)),
         ];
+        // if (selectedCountries.length > 0) {
+        //   filteredData = filteredData.filter((d) =>
+        //     selectedCountries.includes(d.Country)
+        //   );
+        // }
         if (selectedCountry) {
           filteredData = filteredData.filter(
             (d) => d.Country === selectedCountry
@@ -161,6 +189,7 @@ d3.csv("./data.csv")
 
       // Add the y-axis
       svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
+      // countryCheckboxes.on("change", updatedGraph);
       selectCountry.on("change", updatedGraph);
       selectSector.on("change", updatedGraph);
       selectSubsector.on("change", updatedGraph);
