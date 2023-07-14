@@ -33,13 +33,14 @@ d3.csv("./data.csv")
     const Sectors = [...new Set(data.map((d) => d.Sector))];
     const Subsector = [...new Set(data.map((d) => d.Subsector))];
     const Indicator = [...new Set(data.map((d) => d.Indicator))];
+
     //! selections' options
     const optionsOfCountries = selectCountry
       .selectAll("option")
-      .data(Countries)
+      .data(["", ...Countries])
       .enter()
       .append("option")
-      .text((d) => d)
+      .text((d) => (d ? d : "multiple choices"))
       .attr("value", (d) => d);
 
     const optionsOfSectors = selectSector
@@ -47,7 +48,7 @@ d3.csv("./data.csv")
       .data(["", ...Sectors])
       .enter()
       .append("option")
-      .text((d) => d)
+      .text((d) => (d ? d : "select sectors"))
       .attr("value", (d) => d);
 
     const optionsOfSubsectors = selectSubsector
@@ -55,7 +56,7 @@ d3.csv("./data.csv")
       .data(["", ...Subsector])
       .enter()
       .append("option")
-      .text((d) => d)
+      .text((d) => (d ? d : "select subsector"))
       .attr("value", (d) => d);
 
     const optionsOfIndicators = selectIndicator
@@ -63,7 +64,7 @@ d3.csv("./data.csv")
       .data(["", ...Indicator])
       .enter()
       .append("option")
-      .text((d) => d)
+      .text((d) => (d ? d : "select indicator"))
       .attr("value", (d) => d);
 
     // Define the color scale
@@ -91,6 +92,7 @@ d3.csv("./data.csv")
       });
 
       function updatedGraph() {
+        const selectedCountry = selectCountry.property("value");
         const selectedSector = selectSector.property("value");
         const selectedSubsector = selectSubsector.property("value");
         const selectedIndicator = selectIndicator.property("value");
@@ -98,6 +100,11 @@ d3.csv("./data.csv")
         const filteredCountries = [
           ...new Set(filteredData.map((d) => d.Country)),
         ];
+        if (selectedCountry) {
+          filteredData = filteredData.filter(
+            (d) => d.Country === selectedCountry
+          );
+        }
         if (selectedSector) {
           filteredData = filteredData.filter(
             (d) => d.Sector === selectedSector
@@ -154,7 +161,7 @@ d3.csv("./data.csv")
 
       // Add the y-axis
       svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
-
+      selectCountry.on("change", updatedGraph);
       selectSector.on("change", updatedGraph);
       selectSubsector.on("change", updatedGraph);
       selectIndicator.on("change", updatedGraph);
