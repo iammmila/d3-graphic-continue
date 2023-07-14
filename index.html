@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <title>TASK - D3</title>
+    <!--* css -->
+    <link rel="stylesheet" href="./style.css">
+    <!-- ! we can use this link directly or -->
+
+    <!-- <script src="./script.js" defer></script> -->
+</head>
+
+<body>
+    <div>
+        <!-- !filter data -->
+        <div>
+            <div>
+                <label for="country">Country</label>
+                <select name="country" id="country">
+                    <option value="">Country</option>
+                </select>
+            </div>
+            <div>
+                <label for="sector">Sector</label>
+                <select name="sector" id="sector">
+                    <option value="">choose</option>
+                </select>
+            </div>
+            <div>
+                <label for="subsector">Subsector</label>
+                <select name="subsector" id="subsector">
+                    <option value="">choose Subsector</option>
+                </select>
+            </div>
+            <div>
+                <label for="indicator">Indicator</label>
+                <select name="indicator" id="indicator">
+                    <option value="">choose Indicator</option>
+                </select>
+            </div>
+            <div>
+                <label for="year">Year</label>
+                <select name="year" id="year">
+                    <option value="">choose year</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!--! line chart -->
+    <div id="chart-container"></div>
+
+
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- ! we can use this file -->
+    <!-- <script src="./d3.v7.min.js"></script> -->
+    <!--* javascript -->
+    <script src="./graph.js"></script>
+    <script src="./filter.js"></script>
+</body>
+
+</html>
