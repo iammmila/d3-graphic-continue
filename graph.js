@@ -21,7 +21,6 @@ const svg = d3
   .attr("transform", `translate(${margin.left},${margin.top})`);
 
 let Dataaa;
-
 // Load the dataset from the CSV file
 d3.csv("./data.csv")
   .then(function (data) {
@@ -58,15 +57,8 @@ d3.csv("./data.csv")
         const selectedSector = selectSector.property("value");
         const selectedSubsector = selectSubsector.property("value");
         const selectedIndicator = selectIndicator.property("value");
-
-        // Filter the data based on the selected filters
         let filteredData = data;
 
-        // if (selectedCountries.length > 0) {
-        //   filteredData = filteredData.filter((d) =>
-        //     selectedCountries.includes(d.Country)
-        //   );
-        // }
         if (selectedSector) {
           filteredData = filteredData.filter(
             (d) => d.Sector === selectedSector
@@ -103,6 +95,11 @@ d3.csv("./data.csv")
             .y(function (d) {
               return y(d.Rank);
             });
+          // Update the x-axis
+          svg.select(".x-axis").call(d3.axisBottom(x));
+
+          // Update the y-axis
+          svg.select(".y-axis").call(d3.axisLeft(y));
 
           svg
             .append("path")
@@ -113,8 +110,18 @@ d3.csv("./data.csv")
             .attr("d", line);
         });
       }
-      updateGraph();
 
+      updateGraph();
+      // Add the x-axis
+      svg
+        .append("g")
+        .attr("class", "x-axis")
+        .attr("transform", `translate(0, ${height})`)
+        .call(d3.axisBottom(x));
+
+      // Add the y-axis
+      svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
+      
       selectSector.on("change", updateGraph);
       selectSubsector.on("change", updateGraph);
       selectIndicator.on("change", updateGraph);
@@ -134,22 +141,13 @@ d3.csv("./data.csv")
     const Subsector = [...new Set(data.map((d) => d.Subsector))];
     const Indicator = [...new Set(data.map((d) => d.Indicator))];
 
-    const checkboxesOfCountries = selectCountry
-      .selectAll("input")
+    const optionsOfCountries = selectCountry
+      .selectAll("option")
       .data(Countries)
       .enter()
-      .append("label");
-
-    checkboxesOfCountries
-      .append("input")
-      .attr("type", "checkbox")
-      .attr("value", function (d) {
-        return d;
-      });
-
-    checkboxesOfCountries.append("span").text(function (d) {
-      return d;
-    });
+      .append("option")
+      .text((d) => d)
+      .attr("value", (d) => d);
 
     const optionsOfSectors = selectSector
       .selectAll("option")
@@ -176,5 +174,5 @@ d3.csv("./data.csv")
       .attr("value", (d) => d);
   })
   .catch(function (error) {
-    console.log(error);
+    console.log("Error:", error);
   });
