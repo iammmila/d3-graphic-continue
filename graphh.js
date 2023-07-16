@@ -2,11 +2,11 @@ const margin = { top: 70, right: 30, bottom: 40, left: 80 };
 const width = 1200 - margin.left - margin.right;
 const height = 500 - margin.top - margin.bottom;
 // ! Selections
-const selectCountry = d3.select("#country");
 const selectSector = d3.select("#sector");
 const selectSubsector = d3.select("#subsector");
 const selectIndicator = d3.select("#indicator");
 
+//! Country -multiple choices
 const container = d3.select(".container");
 const selectBtn = d3.select(".select-btn");
 const listItems = d3.select(".list-items");
@@ -33,6 +33,9 @@ d3.csv("./data.csv")
       d.Rank = +d.Rank;
     });
 
+    // multiple selected countries tracking
+    let selectedCountries = [];
+
     //! selections' datas
     const Countries = [...new Set(data.map((d) => d.Country))];
     const Sectors = [...new Set(data.map((d) => d.Sector))];
@@ -40,7 +43,10 @@ d3.csv("./data.csv")
     const Indicator = [...new Set(data.map((d) => d.Indicator))];
 
     //! selections' options
-    selectBtn.append("span").classed("btn-text", true).text("Select Multiple Choices");
+    selectBtn
+      .append("span")
+      .classed("btn-text", true)
+      .text("Select Multiple Choices");
     selectBtn.on("click", function () {
       // Toggle the display of listItems
       const display = listItems.style("display");
@@ -78,24 +84,6 @@ d3.csv("./data.csv")
       .append("span")
       .classed("item-text", true)
       .text((d) => (d ? d : "nothing"));
-
-    listItem.on("click", function () {
-      const item = d3.select(this);
-      const isChecked = item.classed("checked");
-      if (isChecked) {
-        item.classed("checked", false);
-      } else {
-        item.classed("checked", true);
-      }
-    });
-
-    const optionsOfCountries = selectCountry
-      .selectAll("option")
-      .data(["", ...Countries])
-      .enter()
-      .append("option")
-      .text((d) => (d ? d : "multiple choices"))
-      .attr("value", (d) => d);
 
     const optionsOfSectors = selectSector
       .selectAll("option")
@@ -146,7 +134,6 @@ d3.csv("./data.csv")
       });
 
       function updatedGraph() {
-        const selectedCountry = selectCountry.property("value");
         const selectedSector = selectSector.property("value");
         const selectedSubsector = selectSubsector.property("value");
         const selectedIndicator = selectIndicator.property("value");
@@ -155,10 +142,9 @@ d3.csv("./data.csv")
         const filteredCountries = [
           ...new Set(filteredData.map((d) => d.Country)),
         ];
-
-        if (selectedCountry) {
-          filteredData = filteredData.filter(
-            (d) => d.Country === selectedCountry
+        if (selectedCountries.length > 0) {
+          filteredData = filteredData.filter((d) =>
+            selectedCountries.includes(d.Country)
           );
         }
         if (selectedSector) {
@@ -209,6 +195,22 @@ d3.csv("./data.csv")
         });
       }
       updatedGraph();
+      listItem.on("click", function () {
+        const item = d3.select(this);
+        const country = item.text();
+        const isChecked = item.classed("checked");
+        if (isChecked) {
+          item.classed("checked", false);
+        } else {
+          item.classed("checked", true);
+        }
+        if (!isChecked) {
+          selectedCountries.push(country);
+        } else {
+          selectedCountries = selectedCountries.filter((c) => c !== country);
+        }
+        updatedGraph();
+      });
       svg
         .append("g")
         .attr("class", "x-axis")
@@ -218,7 +220,6 @@ d3.csv("./data.csv")
       // Add the y-axis
       svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
       // countryCheckboxes.on("change", updatedGraph);
-      selectCountry.on("change", updatedGraph);
       selectSector.on("change", updatedGraph);
       selectSubsector.on("change", updatedGraph);
       selectIndicator.on("change", updatedGraph);
