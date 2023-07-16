@@ -6,7 +6,11 @@ const selectCountry = d3.select("#country");
 const selectSector = d3.select("#sector");
 const selectSubsector = d3.select("#subsector");
 const selectIndicator = d3.select("#indicator");
-const countryCheckboxes = d3.select("#country-checkboxes");
+
+const container = d3.select(".container");
+const selectBtn = d3.select(".select-btn");
+const listItems = d3.select(".list-items");
+const items = d3.selectAll(".item");
 
 // Set up the x and y scales
 const x = d3.scaleTime().range([0, width]);
@@ -36,22 +40,54 @@ d3.csv("./data.csv")
     const Indicator = [...new Set(data.map((d) => d.Indicator))];
 
     //! selections' options
-    // Create checkboxes for multiple choices
-    const countryCheckboxOptions = countryCheckboxes
-      .selectAll("label")
-      .data(["", ...Countries])
-      .enter()
-      .append("label");
+    selectBtn.append("span").classed("btn-text", true).text("Select Multiple Choices");
+    selectBtn.on("click", function () {
+      // Toggle the display of listItems
+      const display = listItems.style("display");
+      if (display === "none") {
+        listItems.style("display", "block");
+        selectBtn.attr("class", "select-btn open");
+      } else {
+        listItems.style("display", "none");
+        selectBtn.attr("class", "select-btn");
+      }
+    });
 
-    countryCheckboxOptions
-      .append("input")
-      .attr("type", "checkbox")
-      .attr("value", (d) => d)
-      // .on("change", updatedGraph);
-
-    // countryCheckboxOptions
+    selectBtn
       .append("span")
-      .text((d) => (d ? d : "All Countries"));
+      .classed("arrow-dwn", true)
+      .append("i")
+      .classed("fa-solid fa-chevron-down", true);
+
+    const listItems = container.append("ul").classed("list-items", true);
+
+    const listItem = listItems
+      .selectAll(".item")
+      .data(Countries)
+      .enter()
+      .append("li")
+      .classed("item", true);
+
+    listItem
+      .append("span")
+      .classed("checkbox", true)
+      .append("i")
+      .classed("fa-solid fa-check check-icon", true);
+
+    listItem
+      .append("span")
+      .classed("item-text", true)
+      .text((d) => (d ? d : "nothing"));
+
+    listItem.on("click", function () {
+      const item = d3.select(this);
+      const isChecked = item.classed("checked");
+      if (isChecked) {
+        item.classed("checked", false);
+      } else {
+        item.classed("checked", true);
+      }
+    });
 
     const optionsOfCountries = selectCountry
       .selectAll("option")
@@ -114,20 +150,12 @@ d3.csv("./data.csv")
         const selectedSector = selectSector.property("value");
         const selectedSubsector = selectSubsector.property("value");
         const selectedIndicator = selectIndicator.property("value");
-        // const selectedCountries = countryCheckboxes
-        //   .selectAll("input[type=checkbox]:checked")
-        //   .nodes()
-        //   .map((checkbox) => checkbox.value);
 
         let filteredData = data;
         const filteredCountries = [
           ...new Set(filteredData.map((d) => d.Country)),
         ];
-        // if (selectedCountries.length > 0) {
-        //   filteredData = filteredData.filter((d) =>
-        //     selectedCountries.includes(d.Country)
-        //   );
-        // }
+
         if (selectedCountry) {
           filteredData = filteredData.filter(
             (d) => d.Country === selectedCountry

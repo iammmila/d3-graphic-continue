@@ -1,7 +1,117 @@
-span {
+* {
   color: black;
   font-size: 20px;
-  text-decoration: underline;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  background-color: #e3f2fd;
+}
+
+.container {
+  position: relative;
+  background-color: #fff;
+  max-width: 320px;
+  width: 100%;
+  margin: 30px auto 30px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.select-btn {
+  display: flex;
+  border-radius: 10px;
+  height: 30px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+.select-btn .btn-text {
+  font-size: 17px;
+  font-weight: 400;
+  color: #333;
+}
+.select-btn .arrow-dwn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  height: 21px;
+  width: 21px;
+  transition: 0.3s;
+}
+.select-btn.open .arrow-dwn {
+  transform: rotate(-180deg);
+}
+.list-items {
+  position: relative;
+  margin-top: 15px;
+  background-color: white;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  display: none;
+}
+.select-btn.open ~ .list-items {
   display: block;
-  visibility: visible;
+}
+.list-items .item {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  height: 50px;
+  cursor: pointer;
+  transition: 0.3s;
+  padding: 0 15px;
+  border-radius: 8px;
+}
+.list-items .item:hover {
+  background-color: #e7edfe;
+}
+.item .item-text {
+  font-size: 16px;
+  font-weight: 400;
+  color: #333;
+}
+.item .checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 16px;
+  width: 16px;
+  border: radius 4px;
+  margin-right: 12px;
+  border: 1.5px solid #c0c0c0;
+  transition: all 0.3s ease-in-out;
+}
+.item.checked .checkbox {
+  background-color: #4070f4;
+  border-color: #4070f4;
+}
+.checkbox .check-icon {
+  font-size: 11px;
+  transform: scale(0);
+  color: white;
+}
+.item.checked .check-icon {
+  transform: scale(1);
+}
+.selection-group {
+  padding: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 40px;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+label {
+  font-size: 24px;
+  padding: 10px;
+}
+
+select {
+  border: 3px solid black;
+  border-radius: 5px;
 }

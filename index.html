@@ -8,31 +8,36 @@
     <title>TASK - D3</title>
     <!--* css -->
     <link rel="stylesheet" href="./style.css">
+    <!--* fontawesome link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 
 <body>
     <div>
         <!-- !filter data -->
-        <div>
-            <div>
-                <div id="country-checkboxes"></div>
+        <div class="selection-group">
+            <div class="container">
+                <div class="select-btn"></div>
             </div>
-            <div>
+            <div class="selection">
                 <label for="country">Country</label>
                 <select name="country" id="country">
                 </select>
             </div>
-            <div>
+            <div class="selection">
                 <label for="sector">Sector</label>
                 <select name="sector" id="sector">
                 </select>
             </div>
-            <div>
+            <div class="selection">
                 <label for="subsector">Subsector</label>
                 <select name="subsector" id="subsector">
                 </select>
             </div>
-            <div>
+            <div class="selection">
                 <label for="indicator">Indicator</label>
                 <select name="indicator" id="indicator">
                 </select>
