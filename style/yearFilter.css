@@ -1,22 +1,12 @@
-* {
-  color: black;
-  font-size: 20px;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-body {
-  background-color: #e3f2fd;
-}
-
-.container {
+.container-year {
   position: relative;
   background-color: #fff;
   max-width: 320px;
   width: 100%;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
-.select-btn {
+
+.select-btn-year {
   display: flex;
   border-radius: 10px;
   height: 30px;
@@ -26,12 +16,12 @@ body {
   cursor: pointer;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
-.select-btn .btn-text {
+.select-btn-year .btn-text-year {
   font-size: 17px;
   font-weight: 400;
   color: #333;
 }
-.select-btn .arrow-dwn {
+.select-btn-year .arrow-dwn-year {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,10 +30,10 @@ body {
   width: 21px;
   transition: 0.3s;
 }
-.select-btn.open .arrow-dwn {
+.select-btn-year.open-year .arrow-dwn-year {
   transform: rotate(-180deg);
 }
-.list-items {
+.list-items-year {
   position: relative;
   margin-top: 15px;
   background-color: white;
@@ -55,10 +45,10 @@ body {
   overflow-y: scroll;
 }
 
-.select-btn.open ~ .list-items {
+.select-btn-year.open-year ~ .list-items-year {
   display: block;
 }
-.list-items .item {
+.list-items-year .item-year {
   display: flex;
   align-items: center;
   list-style: none;
@@ -68,52 +58,35 @@ body {
   padding: 0 15px;
   border-radius: 8px;
 }
-.list-items .item:hover {
+.list-items-year .item-year:hover {
   background-color: #e7edfe;
 }
-.item .item-text {
+.item-year .item-text-year {
   font-size: 16px;
   font-weight: 400;
   color: #333;
 }
-.item .checkbox {
+.item-year .checkbox-year {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 16px;
   width: 16px;
-  border: radius 4px;
+  border-radius: 4px;
   margin-right: 12px;
   border: 1.5px solid #c0c0c0;
   transition: all 0.3s ease-in-out;
 }
-.item.checked .checkbox {
+.item-year.checked .checkbox-year {
   background-color: #4070f4;
   border-color: #4070f4;
 }
-.checkbox .check-icon {
+.checkbox-year .check-icon {
   font-size: 11px;
   transform: scale(0);
   color: white;
 }
-.item.checked .check-icon {
+
+.item-year.checked .check-icon {
   transform: scale(1);
-}
-.selection-group {
-  padding: 30px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 40px;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-}
-
-label {
-  font-size: 24px;
-  padding: 10px;
-}
-
-select {
-  border: 3px solid black;
-  border-radius: 5px;
 }
