@@ -19,6 +19,7 @@
 </head>
 
 <body>
+
     <div>
         <!-- !filter data -->
         <div class="selection-group">
@@ -47,18 +48,30 @@
     <div id="chart-container"></div>
 
     <!-- !years -only 2 year -->
-    <div class="container-year">
-        <div class="select-btn-year"></div>
-    </div>
+    <select name="firstYear" id="firstYear"></select>
+    <select name="secondYear" id="secondYear"></select>
+
     <!-- ! The lists of chart -->
     <div class="second-section">
-        <ul class="table-lists"></ul>
+        <ul class="table-lists">
+            <li class="lists">
+                <div class="first-country">
+                    <span></span>
+                    <div class="images"></div>
+                </div>
+                <div class="second-difference">
+                    <div class="amount-image"></div>
+                    <span></span>
+                </div>
+                <div class="third-meaning"></div>
+            </li>
+        </ul>
     </div>
     <!-- ! we can use this link directly or -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <!-- ! we can use this file -->
     <!-- <script src="./d3.v7.min.js"></script> -->
-    <!--* javascript -->3
+    <!--* javascript -->
 
     <script src="./graphh.js"></script>
     <script src="./secondGraph.js"></script>

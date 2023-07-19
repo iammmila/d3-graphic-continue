@@ -23,6 +23,13 @@
   font-size: 28px;
 }
 
+.first-country{
+
+}
 li {
   list-style: none;
+}
+img {
+  width: 40px;
+  border-radius: 10px;
 }

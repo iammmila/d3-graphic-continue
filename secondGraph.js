@@ -5,65 +5,46 @@ const selectBtnYear = d3.select(".select-btn-year");
 const listItemsYear = d3.select(".list-items-year");
 const itemsYear = d3.selectAll(".item-year");
 
+const firstYearSelection = d3.select("#firstYear");
+const secondYearSelection = d3.select("#secondYear");
+// api - countries
+async function fetchCountryFlag(country) {
+  try {
+    const response = await fetch(
+      `https://restcountries.com/v3.1/name/${country}`
+    );
+    const data = await response.json();
+    const flag = data[0].flags.svg;
+    return flag;
+  } catch (error) {
+    console.log("Error fetching country flag:", error);
+    return null;
+  }
+}
+
 //! fethcing data
 d3.csv("./data.csv")
   .then(function (data) {
-    data.forEach(function (d) {
-      d.Year = String(d.Year);
-      d.Rank = +d.Rank;
-    });
-
-    //! multiple selected years tracking
-    let selectedYears = [];
-
     //! selections' datas
     const Countries = [...new Set(data.map((d) => d.Country))];
     const Amounts = [...new Set(data.map((d) => d.Amount))];
     const Years = [...new Set(data.map((d) => d.Year))];
 
-    //! selections' options
-    selectBtnYear
-      .append("span")
-      .classed("btn-text-year", true)
-      .text("Select Multiple Choices");
-    selectBtnYear.on("click", function () {
-      // Toggle the display of listItems
-      const display = listItemsYear.style("display");
-      if (display === "none") {
-        listItemsYear.style("display", "block");
-        selectBtnYear.attr("class", "select-btn-year open-year");
-      } else {
-        listItemsYear.style("display", "none");
-        selectBtnYear.attr("class", "select-btn-year");
-      }
-    });
-    selectBtnYear
-      .append("span")
-      .classed("arrow-dwn-year", true)
-      .append("i")
-      .classed("fa-solid fa-chevron-down", true);
-
-    const listItemsYear = containerYear
-      .append("ul")
-      .classed("list-items-year", true);
-
-    const listItemYear = listItemsYear
-      .selectAll(".item-year")
-      .data(Years.sort())
+    const optionsOfFirstYear = firstYearSelection
+      .selectAll("option")
+      .data(["", ...Years.sort()])
       .enter()
-      .append("li")
-      .classed("item-year", true);
+      .append("option")
+      .text((d) => (d ? d : "First Year"))
+      .attr("value", (d) => d);
 
-    listItemYear
-      .append("span")
-      .classed("checkbox-year", true)
-      .append("i")
-      .classed("fa-solid fa-check check-icon", true);
-
-    listItemYear
-      .append("span")
-      .classed("item-text-year", true)
-      .text((d) => (d ? d : "nothing"));
+    const optionsOfSecondYear = secondYearSelection
+      .selectAll("option")
+      .data(["", ...Years.sort()])
+      .enter()
+      .append("option")
+      .text((d) => (d ? d : "Second Year"))
+      .attr("value", (d) => d);
 
     //!table's data
     const lists = d3
@@ -75,36 +56,98 @@ d3.csv("./data.csv")
       .classed("lists", true);
 
     // Create the elements within each list item
-    lists
+    const firstCountry = lists
       .append("div")
-      .classed("name-country", true)
+      .classed("first-country", true)
+      .append("span")
       .text((d) => d);
 
-    lists
+    firstCountry
       .append("div")
       .classed("icon-country", true)
-      .text((d) => d);
+      .each(async function (country) {
+        const flagUrl = await fetchCountryFlag(country);
+        if (flagUrl) {
+          d3.select(this).html(`<img src="${flagUrl}" alt="${country}" />`);
+        } else {
+          d3.select(this).text("N/A");
+        }
+      });
 
-    lists
+    const secondDifference = lists
       .append("div")
-      .classed("amount-country", true)
+      .classed("second-difference", true);
+
+    secondDifference
+      .append('div')
+      .classed("amount-image", true)
       .text((d, i) => Amounts[i]);
 
-    // !selection of year  - onClick
-    listItemYear.on("click", function () {
-      const item = d3.select(this);
-      const year = parseInt(item.text());
-      const isChecked = item.classed("checked");
-      const checkedItems = listItemYear.filter(".checked");
+    secondDifference.append("span").text((d) => d);
 
-      if (isChecked && checkedItems.size() <= 2) {
-        item.classed("checked", false);
-        selectedYears = selectedYears.filter((c) => c !== year);
-      } else if (!isChecked && checkedItems.size() < 2) {
-        item.classed("checked", true);
-        selectedYears.push(year);
+    const thirdMeaning = lists
+      .append("div")
+      .classed("third-meaning", true)
+      .text((d) => d);
+
+    function calculateAmountDifference(
+      selectedFirstYear,
+      selectedSecondYear,
+      country,
+      data
+    ) {
+      let firstYearData = null;
+      let secondYearData = null;
+
+      // Find the data entries for the selected years and the given country
+      for (const d of data) {
+        if (d.Country === country && d.Year === selectedFirstYear) {
+          firstYearData = d;
+        }
+        if (d.Country === country && d.Year === selectedSecondYear) {
+          secondYearData = d;
+        }
       }
-      console.log(selectedYears);
-    });
+
+      // Convert "Amount" values to numbers
+      const firstAmount = firstYearData
+        ? parseFloat(firstYearData.Amount)
+        : NaN;
+      const secondAmount = secondYearData
+        ? parseFloat(secondYearData.Amount)
+        : NaN;
+
+      // Calculate the difference between amounts
+      if (!isNaN(firstAmount) && !isNaN(secondAmount)) {
+        return firstAmount - secondAmount;
+      }
+
+      // If data is not available for both selected years, return a default value (you can customize this based on your requirements)
+      return "N/A";
+    }
+
+    // Event listener for year selection change
+    function handleYearSelectionChange() {
+      // Get the selected years
+      const selectedFirstYear = firstYearSelection.property("value");
+      const selectedSecondYear = secondYearSelection.property("value");
+
+      // Update the "amount-country" div for each country
+      lists.selectAll(".amount-country").text((country) => {
+        const amountDifference = calculateAmountDifference(
+          selectedFirstYear,
+          selectedSecondYear,
+          country,
+          data
+        );
+        return amountDifference !== "N/A"
+          ? `Difference: ${amountDifference}`
+          : "N/A";
+      });
+    }
+
+    firstYearSelection.on("change", handleYearSelectionChange);
+    secondYearSelection.on("change", handleYearSelectionChange);
+    // handleYearSelectionChange();
   })
   .catch((error) => console.log("error:", error));

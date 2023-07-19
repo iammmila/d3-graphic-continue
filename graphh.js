@@ -239,3 +239,6 @@ d3.csv("./data.csv")
     svg.append("g").call(d3.axisLeft(y));
   })
   .catch((error) => console.log("error:", error));
+// todo1 comparison of 2 years 
+// todo2 comparison of 2 amounts of countries
+// todo3 flags  
