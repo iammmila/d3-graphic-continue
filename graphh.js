@@ -12,16 +12,6 @@ const selectBtnCountry = d3.select(".select-btn");
 const listItemsCountry = d3.select(".list-items");
 const itemsCountry = d3.selectAll(".item");
 
-// !selection year (we can choose only bothb of these years)
-const containerYear = d3.select(".container-year");
-const selectBtnYear = d3.select(".select-btn-year");
-const listItemsYear = d3.select(".list-items-year");
-const itemsYear = d3.selectAll(".item-year");
-
-const http = "https://restcountries.com/v3.1/all";
-//!table
-const secondSection = d3.select(".second-section");
-
 // Set up the x and y scales
 const x = d3.scaleTime().range([0, width]);
 const y = d3.scaleLinear().range([height, 0]);
@@ -45,15 +35,12 @@ d3.csv("./data.csv")
 
     // multiple selected countries tracking
     let selectedCountries = [];
-    let selectedYears = [];
 
     //! selections' datas
     const Countries = [...new Set(data.map((d) => d.Country))];
     const Sectors = [...new Set(data.map((d) => d.Sector))];
     const Subsector = [...new Set(data.map((d) => d.Subsector))];
     const Indicator = [...new Set(data.map((d) => d.Indicator))];
-    const Amounts = [...new Set(data.map((d) => d.Amount))];
-    const Years = [...new Set(data.map((d) => d.Year))];
 
     //! selections' options
     selectBtnCountry
@@ -100,49 +87,6 @@ d3.csv("./data.csv")
       .classed("item-text", true)
       .text((d) => (d ? d : "nothing"));
 
-    selectBtnYear
-      .append("span")
-      .classed("btn-text-year", true)
-      .text("Select Multiple Choices");
-    selectBtnYear.on("click", function () {
-      // Toggle the display of listItems
-      const display = listItemsYear.style("display");
-      if (display === "none") {
-        listItemsYear.style("display", "block");
-        selectBtnYear.attr("class", "select-btn-year open-year");
-      } else {
-        listItemsYear.style("display", "none");
-        selectBtnYear.attr("class", "select-btn-year");
-      }
-    });
-    selectBtnYear
-      .append("span")
-      .classed("arrow-dwn-year", true)
-      .append("i")
-      .classed("fa-solid fa-chevron-down", true);
-
-    const listItemsYear = containerYear
-      .append("ul")
-      .classed("list-items-year", true);
-
-    const listItemYear = listItemsYear
-      .selectAll(".item-year")
-      .data(Years.sort())
-      .enter()
-      .append("li")
-      .classed("item-year", true);
-
-    listItemYear
-      .append("span")
-      .classed("checkbox-year", true)
-      .append("i")
-      .classed("fa-solid fa-check check-icon", true);
-
-    listItemYear
-      .append("span")
-      .classed("item-text-year", true)
-      .text((d) => (d ? d : "nothing"));
-
     const optionsOfSectors = selectSector
       .selectAll("option")
       .data(["", ...Sectors])
@@ -167,30 +111,6 @@ d3.csv("./data.csv")
       .text((d) => (d ? d : "select indicator"))
       .attr("value", (d) => d);
 
-    //!table's data
-    const lists = d3
-      .select(".table-lists")
-      .selectAll(".lists")
-      .data(Countries)
-      .enter()
-      .append("li")
-      .classed("lists", true);
-
-    // Create the elements within each list item
-    lists
-      .append("div")
-      .classed("name-country", true)
-      .text((d) => d);
-
-    lists
-      .append("div")
-      .classed("icon-country", true)
-      .text((d) => d);
-
-    lists
-      .append("div")
-      .classed("amount-country", true)
-      .text((d, i) => Amounts[i]);
     // Define the color scale
     const colorScales = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -220,7 +140,6 @@ d3.csv("./data.csv")
         const selectedSector = selectSector.property("value");
         const selectedSubsector = selectSubsector.property("value");
         const selectedIndicator = selectIndicator.property("value");
-
         let filteredData = data;
         const filteredCountries = [
           ...new Set(filteredData.map((d) => d.Country)),
@@ -297,24 +216,6 @@ d3.csv("./data.csv")
         updatedGraph();
       });
 
-      // !selection of year  - onClick
-      listItemYear.on("click", function () {
-        const item = d3.select(this);
-        const year = item.text();
-        const isChecked = item.classed("checked");
-        if (isChecked) {
-          item.classed("checked", false);
-        } else {
-          item.classed("checked", true);
-        }
-        if (!isChecked) {
-          selectedYears.push(year);
-        } else {
-          selectedYears = selectedYears.filter((c) => c !== year);
-        }
-        // updatedGraph();
-      });
-
       svg
         .append("g")
         .attr("class", "x-axis")
@@ -323,17 +224,17 @@ d3.csv("./data.csv")
 
       // Add the y-axis
       svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
-      // countryCheckboxes.on("change", updatedGraph);
+
       selectSector.on("change", updatedGraph);
       selectSubsector.on("change", updatedGraph);
       selectIndicator.on("change", updatedGraph);
     });
+
     // Add the x-axis
     svg
       .append("g")
       .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(x));
-
     // Add the y-axis
     svg.append("g").call(d3.axisLeft(y));
   })
