@@ -23,8 +23,12 @@
   font-size: 28px;
 }
 
-.first-country{
-
+.first-country, .second-difference {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 li {
   list-style: none;

@@ -7,7 +7,6 @@ const itemsYear = d3.selectAll(".item-year");
 
 const firstYearSelection = d3.select("#firstYear");
 const secondYearSelection = d3.select("#secondYear");
-// api - countries
 async function fetchCountryFlag(country) {
   try {
     const response = await fetch(
@@ -21,7 +20,15 @@ async function fetchCountryFlag(country) {
     return null;
   }
 }
-
+function getSVGIcon(amountDifference) {
+  if (amountDifference > 0) {
+    return "./svgPosition/positionUp.svg";
+  } else if (amountDifference < 0) {
+    return "./svgPosition/positionDown.svg";
+  } else {
+    return "./svgPosition/positionNoChange.svg";
+  }
+}
 //! fethcing data
 d3.csv("./data.csv")
   .then(function (data) {
@@ -56,11 +63,8 @@ d3.csv("./data.csv")
       .classed("lists", true);
 
     // Create the elements within each list item
-    const firstCountry = lists
-      .append("div")
-      .classed("first-country", true)
-      .append("span")
-      .text((d) => d);
+    const firstCountry = lists.append("div").classed("first-country", true);
+    firstCountry.append("span").text((d) => d);
 
     firstCountry
       .append("div")
@@ -70,7 +74,7 @@ d3.csv("./data.csv")
         if (flagUrl) {
           d3.select(this).html(`<img src="${flagUrl}" alt="${country}" />`);
         } else {
-          d3.select(this).text("N/A");
+          d3.select(this).text("not found");
         }
       });
 
@@ -78,17 +82,17 @@ d3.csv("./data.csv")
       .append("div")
       .classed("second-difference", true);
 
-    secondDifference
-      .append('div')
-      .classed("amount-image", true)
-      .text((d, i) => Amounts[i]);
+    secondDifference.append("div").classed("amount-image", true).text("");
 
-    secondDifference.append("span").text((d) => d);
+    secondDifference
+      .append("span")
+      .classed("diff", true)
+      .text((d) => d);
 
     const thirdMeaning = lists
       .append("div")
       .classed("third-meaning", true)
-      .text((d) => d);
+      .text("");
 
     function calculateAmountDifference(
       selectedFirstYear,
@@ -119,11 +123,11 @@ d3.csv("./data.csv")
 
       // Calculate the difference between amounts
       if (!isNaN(firstAmount) && !isNaN(secondAmount)) {
-        return firstAmount - secondAmount;
+        return parseFloat(secondAmount - firstAmount);
       }
 
       // If data is not available for both selected years, return a default value (you can customize this based on your requirements)
-      return "N/A";
+      return "not found";
     }
 
     // Event listener for year selection change
@@ -131,23 +135,49 @@ d3.csv("./data.csv")
       // Get the selected years
       const selectedFirstYear = firstYearSelection.property("value");
       const selectedSecondYear = secondYearSelection.property("value");
-
       // Update the "amount-country" div for each country
-      lists.selectAll(".amount-country").text((country) => {
+      lists.each(function (country) {
         const amountDifference = calculateAmountDifference(
           selectedFirstYear,
           selectedSecondYear,
           country,
           data
         );
-        return amountDifference !== "N/A"
-          ? `Difference: ${amountDifference}`
-          : "N/A";
+        const svgIcon = getSVGIcon(amountDifference);
+        const listItem = d3.select(this);
+
+        listItem
+          .select(".amount-image")
+          .html(`<img src="${svgIcon}" alt="${country}" />`);
+
+        // Set the text for the "third-meaning" class based on the amountDifference
+        const thirdMeaning = listItem.select(".third-meaning");
+
+        if (amountDifference > 0) {
+          thirdMeaning.text("positions up").style("color", "lightgreen");
+          listItem.select(".diff").style("color", "lightgreen");
+        } else if (amountDifference < 0) {
+          thirdMeaning.text("positions down").style("color", "red");
+          listItem.select(".diff").style("color", "red");
+        } else if (amountDifference === "not found") {
+          thirdMeaning.text("not found").style("color", "orange");
+          listItem.select(".diff").style("color", "orange");
+        } else {
+          thirdMeaning.text("no changes").style("color", "lightgray");
+          listItem.select(".diff").style("color", "lightgray");
+        }
+
+        listItem
+          .select(".diff")
+          .text(
+            amountDifference !== "not found"
+              ? `${amountDifference}`
+              : "not found"
+          );
       });
     }
 
     firstYearSelection.on("change", handleYearSelectionChange);
     secondYearSelection.on("change", handleYearSelectionChange);
-    // handleYearSelectionChange();
   })
   .catch((error) => console.log("error:", error));
