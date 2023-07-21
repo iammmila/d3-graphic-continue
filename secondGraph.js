@@ -55,7 +55,7 @@ d3.csv("./data.csv")
 
     //!table's data
     const lists = d3
-      .select(".table-lists")
+      .select(".scrolling")
       .selectAll(".lists")
       .data(Countries)
       .enter()
@@ -179,5 +179,13 @@ d3.csv("./data.csv")
 
     firstYearSelection.on("change", handleYearSelectionChange);
     secondYearSelection.on("change", handleYearSelectionChange);
+
+    // Setting default values and triggering the change event
+    const firstYear = Years.sort()[0];
+    const lastYear = Years.sort()[Years.length - 1];
+    firstYearSelection.property("value", firstYear);
+    secondYearSelection.property("value", lastYear);
+    firstYearSelection.on("change")();
+    secondYearSelection.on("change")();
   })
   .catch((error) => console.log("error:", error));

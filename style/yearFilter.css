@@ -1,92 +1,61 @@
-.container-year {
-  position: relative;
-  background-color: #fff;
-  max-width: 320px;
-  width: 100%;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-}
-
-.select-btn-year {
-  display: flex;
-  border-radius: 10px;
-  height: 30px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  cursor: pointer;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-}
-.select-btn-year .btn-text-year {
-  font-size: 17px;
-  font-weight: 400;
-  color: #333;
-}
-.select-btn-year .arrow-dwn-year {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  height: 21px;
-  width: 21px;
-  transition: 0.3s;
-}
-.select-btn-year.open-year .arrow-dwn-year {
-  transform: rotate(-180deg);
-}
-.list-items-year {
-  position: relative;
-  margin-top: 15px;
+select {
+  /* styling */
   background-color: white;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 16px;
-  display: none;
-  max-height: 200px;
-  overflow-y: scroll;
-}
-
-.select-btn-year.open-year ~ .list-items-year {
-  display: block;
-}
-.list-items-year .item-year {
-  display: flex;
-  align-items: center;
-  list-style: none;
-  height: 50px;
-  cursor: pointer;
-  transition: 0.3s;
-  padding: 0 15px;
-  border-radius: 8px;
-}
-.list-items-year .item-year:hover {
-  background-color: #e7edfe;
-}
-.item-year .item-text-year {
-  font-size: 16px;
-  font-weight: 400;
-  color: #333;
-}
-.item-year .checkbox-year {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 16px;
-  width: 16px;
+  border: thin solid lightgray;
   border-radius: 4px;
-  margin-right: 12px;
-  border: 1.5px solid #c0c0c0;
-  transition: all 0.3s ease-in-out;
-}
-.item-year.checked .checkbox-year {
-  background-color: #4070f4;
-  border-color: #4070f4;
-}
-.checkbox-year .check-icon {
-  font-size: 11px;
-  transform: scale(0);
-  color: white;
+  display: inline-block;
+  font: inherit;
+  line-height: 1.5em;
+
+  padding: 0.5em 3.5em 0.5em 1em;
+
+  /* reset */
+
+  margin: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
-.item-year.checked .check-icon {
-  transform: scale(1);
+/* arrows */
+select.minimal {
+  background-image: linear-gradient(45deg, transparent 50%, gray 50%),
+    linear-gradient(135deg, gray 50%, transparent 50%),
+    linear-gradient(to right, #ccc, #ccc);
+  background-position: calc(100% - 20px) calc(1em + 2px),
+    calc(100% - 15px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
+  background-size: 5px 5px, 5px 5px, 1px 1.5em;
+  background-repeat: no-repeat;
+}
+
+select.minimal:focus {
+  background-image: linear-gradient(45deg, lightgray 50%, transparent 50%),
+    linear-gradient(135deg, transparent 50%, lightgray 50%),
+    linear-gradient(to right, #ccc, #ccc);
+  background-position: calc(100% - 15px) 1em, calc(100% - 20px) 1em,
+    calc(100% - 2.5em) 0.5em;
+  background-size: 5px 5px, 5px 5px, 1px 1.5em;
+  background-repeat: no-repeat;
+  border-color: lightgray;
+  outline: 0;
+}
+
+select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
+}
+
+/* body {
+  background-color: rgb(0, 159, 214);
+  font: bold 1em/100% "Helvetica Neue", Arial, sans-serif;
+  padding: 2em 0;
+  text-align: center;
+} */
+h1 {
+  color: white;
+  line-height: 120%;
+  margin: 0 auto 2rem auto;
+  max-width: 30rem;
 }

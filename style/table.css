@@ -6,34 +6,65 @@
 }
 
 .table-lists {
-  border: 3px solid black;
+  border: 3px solid lightgray;
   border-radius: 10px;
-  padding: 20px;
+  width: 500px;
+  max-height: 500px;
 }
-
+.scrolling {
+  max-height: 300px;
+  overflow-y: scroll;
+}
+.difference-in-rank {
+  padding: 15px;
+  background-color: lightgray;
+}
+.difference-selections {
+  padding: 20px 0;
+}
+.first-country {
+  width: 150px;
+}
+.second-difference {
+  width: 100px;
+}
+.third-meaning {
+  width: 150px;
+}
 .lists {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
-  gap: 100px;
+  justify-content: center;
+  gap: 30px;
   margin-bottom: 10px;
 }
 
 .lists div {
-  font-size: 28px;
+  font-size: 20px;
 }
 
-.first-country, .second-difference {
+.first-country,
+.second-difference {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   gap: 10px;
 }
 li {
   list-style: none;
 }
+.first-country {
+  display: flex;
+  justify-content: flex-end;
+}
 img {
-  width: 40px;
+  width: 35px;
   border-radius: 10px;
+}
+.difference-selections {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
