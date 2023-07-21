@@ -128,9 +128,9 @@ d3.csv("./data.csv")
     ]);
 
     // extract the unique country names
-    const countries = [...new Set(data.map((d) => d.Country))];
+    // const countries = [...new Set(data.map((d) => d.Country))];
     //!fetching countries
-    countries.forEach(function (country, index) {
+    Countries.forEach(function (country, index) {
       // Filter the data for the current country
       const filteredData = data.filter(function (d) {
         return d.Country === country;
@@ -171,7 +171,6 @@ d3.csv("./data.csv")
         filteredCountries.forEach(function (country, index) {
           const countryData = filteredData.filter((d) => d.Country === country);
           // Create the line generator for the current country
-
           const line = d3
             .line()
             .x(function (d) {
@@ -229,7 +228,6 @@ d3.csv("./data.csv")
       selectSubsector.on("change", updatedGraph);
       selectIndicator.on("change", updatedGraph);
     });
-
     // Add the x-axis
     svg
       .append("g")
@@ -239,6 +237,3 @@ d3.csv("./data.csv")
     svg.append("g").call(d3.axisLeft(y));
   })
   .catch((error) => console.log("error:", error));
-// todo1 comparison of 2 years 
-// todo2 comparison of 2 amounts of countries
-// todo3 flags  

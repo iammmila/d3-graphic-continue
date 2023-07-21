@@ -1,7 +1,6 @@
 // !selection year (we can choose only bothb of these years)
 const secondSection = d3.select(".second-section");
 const containerYear = d3.select(".container-year");
-const selectBtnYear = d3.select(".select-btn-year");
 const listItemsYear = d3.select(".list-items-year");
 const itemsYear = d3.selectAll(".item-year");
 
@@ -52,7 +51,6 @@ d3.csv("./data.csv")
       .append("option")
       .text((d) => (d ? d : "Second Year"))
       .attr("value", (d) => d);
-
     //!table's data
     const lists = d3
       .select(".scrolling")
@@ -176,7 +174,6 @@ d3.csv("./data.csv")
           );
       });
     }
-
     firstYearSelection.on("change", handleYearSelectionChange);
     secondYearSelection.on("change", handleYearSelectionChange);
 
